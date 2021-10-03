@@ -8,6 +8,9 @@ COVID-19 severity based on BALF scRNA-seq data**.
 
 The **scBALF_Monocle.md** file from the Monocle folder explains how one can extract the list of potential COVID-19 severity biomarkers using Monocle. The R markdown files are also available in the same folder.
 
+![GitHub Logo](/images/logo.png)
+Format: ![Alt Text](url)
+
 
 ## BALF Cells Classification:
 
