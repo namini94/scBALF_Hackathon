@@ -9,12 +9,14 @@ COVID-19 severity based on BALF scRNA-seq data**.
 The **scBALF_Monocle.md** file from the Monocle folder explains how one can extract the list of potential COVID-19 severity biomarkers using Monocle. The R markdown files are also available in the same folder.
 
 ![GitHub Logo](/images/fig2.png)
-Format: ![Alt Text](url)
+
 
 
 ## BALF Cells Classification:
 
 In the second step of our proposed pipeline we run multiple linear and non-linear machine learning classification algorithms to perform cell classification ( One lable vs the rest). Here we explain how one can run these classification algorithms:
+
+![GitHub Logo](/images/fig2.png)
 
 1. **Lindear Discriminant Aanlysis (LDA):**
 
