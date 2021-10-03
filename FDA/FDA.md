@@ -1,6 +1,6 @@
 # Flexible Discriminant Analysis (LDA) 
 
-Here we explain how LDA can be performed to classify cells based on expression of top DE genes.
+Here we explain how FDA can be performed to classify cells based on expression of top DE genes.
 
 ``` R 
 #### Flexible Discriminant Analysis (FDA)
@@ -100,43 +100,6 @@ imp_genes<-c( "SFTA2",      "RSAD2",     "IL21",       "PEG10",      "IGHV3.69.1
               "PPP1R15A" ,  "ANXA3"  ,    "FOLR3",      "NAMPT"    ,  "MT1E"    ,
               "TNFAIP6"  ,  "MT.ATP6",    "SAT1",       "AC136475.9")
 
-#172genes
-
-imp_genes<-c("SFTA2",      "RSAD2"     , "IL21",       "PEG10",      "IGHV3.69.1"
-, "SPON1"     , "IFNL2"   ,   "SLAMF7"  ,   "ADGRF5"  ,   "CCL8"      
-, "CALHM6"    , "RGL1"    ,   "CD52"    ,   "CXCL10"  ,   "IL4I1"     
-, "IGFL2"     , "IDO1"    ,   "GCH1"    ,   "CXCL11"  ,   "SFTPB"     
-, "FABP4"     , "SFTA1P"  ,   "SGK1"    ,   "GJA1"    ,   "HKDC1"     
-, "CRYBA4"    , "GBP5"    ,   "MARCKS"  ,   "CD3E"    ,   "TNFSF10"   
-, "ANKRD22"   , "CTSE"    ,   "SFN"     ,   "CCL3"    ,   "S100A14"   
-, "PFKFB3"    , "SDS"     ,   "LGMN"    ,   "KRT7"    ,   "CYR61"     
-, "IFIT1"     , "CTSB"    ,   "CTSL"    ,   "SAA2.SAA4",  "ATF5"      
-, "IFNL3"     , "GBP1"    ,   "GBP4"    ,   "TRAV38.1",   "CCL2"      
-, "TSHZ2"     , "CCL4"    ,   "NINJ1"   ,   "CD38"    ,   "MAL2"      
-, "ALOX5AP"   , "CD7"     ,   "SPRR1B"  ,   "MAFB"    ,   "TRBV7.4"   
-, "MX1"       , "IFIT3"   ,   "ATF3"    ,   "RNASE7"  ,   "CXCL9"     
-, "AC089983.1", "GZMA"    ,   "FBXW10"  ,   "KRT16"   ,   "VAMP5"     
-, "IGFBP4"  ,   "HES4"    ,   "FGL2"    ,   "KRTAP3.1" ,  "CLDN3"     
-, "LAMC2"   ,   "PLA2G7"  ,   "MARCO"   ,   "IER3"    ,   "NUPR1"     
-, "CD2"     ,   "PTPRCAP" ,   "SPHK1"   ,   "TYROBP"  ,   "ICAM1"     
-, "TMPRSS11D",  "CD247"   ,   "IGHV5.51",   "KLF6"    ,   "TNFSF13B"  
-, "SPOCK2"  ,   "CEACAM7" ,   "CCL4L2"  ,   "CD48"    ,   "SFTPA2"    
-, "CCR4"    ,   "SPP1"    ,   "LYZ"     ,   "CLIC3"   ,   "CEACAM6"   
-, "WARS"    ,   "PRSS3"   ,   "SLC39A8" ,   "LCK"     ,   "FNIP2"     
-, "SMIM22"  ,   "CST3"    ,   "CAV1"    ,   "SCIN"    ,   "NMUR1"     
-, "GNLY"    ,   "TM4SF1"  ,   "RAB25"   ,   "TGFBI"   ,   "IGFL1"     
-, "TRAV12.2",   "C19orf33",   "PTPRE"   ,   "TRBV11.1" ,  "SH2D1A"    
-, "CRIP1"   ,   "MUC4"    ,   "RGS1"    ,   "SSTR2"   ,   "IFNG"      
-, "ADM"     ,   "AC242022.1", "GZMB"    ,   "CEBPD"   ,   "LGALS7"    
-, "GPR183"  ,   "SPRR2D"    , "TRDV3"   ,   "SFTPA1"  ,   "RPL36A"    
-, "IGHV3.72",   "RPL17"     , "ABCB5"   ,   "CD163"   ,   "MYH14"     
-, "IGLV5.48",   "PALM"      , "C1orf116" ,  "LINC01781",  "CDH1"     
-, "KRT6A"   ,   "WIF1"      , "TMPRSS9" ,   "KRT80"   ,   "PERP"      
-, "STAB1"   ,   "IL32"      , "HOPX"    ,   "SOCS3"   ,   "TRBV6.6"   
-, "SYNE2"   ,   "ARID5B"    , "MCEMP1"  ,   "TUBA4B"  ,   "CD8A"      
-, "CXCL17"  ,   "PRSS2"     , "CLDN4"   ,   "TRBV29.1" ,  "S100A6"    
-, "KCNN1"   ,   "ZAP70"     , "KRT8"    ,   "TMPRSS11A",  "INSIG1"  
-, "TMEM176A",   "KRT18")  
 
 
 data_imp<-t(data)[,intersect(rownames(data),imp_genes)]
