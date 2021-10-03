@@ -1,17 +1,14 @@
 # Support Vector Machine 
 
-Here we explain how FDA can be performed to classify cells based on expression of top DE genes.
+Here we explain how SVM with RBF kernel function can be performed to classify cells based on expression of top DE genes.
 
 ``` R 
-
-#### Flexible Discriminant Analysis (FDA)
+###SVM
+library(e1071)
 memory.limit(size=150000)
 library(dplyr)
 library(ggplot2)
-library(MASS)
-library(mda)
-#install.packages("PRROC")
-#library(PRROC)
+library(PRROC)
 data<-read.csv(file = "/scratch/user/naminiyakan/hackathon/covid-selected-data.csv")
 data<-as.matrix(data)
 rownames(data)<-data[,1]
@@ -21,6 +18,7 @@ data<-apply(data,2,as.numeric)
 rownames(data)<-n
 data<-t(data)
 dim(data)
+
 true_lables<-read.csv(file="/scratch/user/naminiyakan/hackathon/covid-selected-data-labels.csv")
 true_lables<-as.matrix(true_lables)
 rownames(true_lables)<-true_lables[,1]
@@ -31,15 +29,20 @@ true_lables<-as.matrix(true_lables)
 colnames(true_lables)<-c("cell_type")
 true_lables<-as.data.frame(true_lables)
 summary(as.factor(true_lables$cell_type))
+
 true_lables<-true_lables %>% mutate(Nor_vs_rest = case_when(
   cell_type == c("Normal") ~ "Normal",
   cell_type != c("Normal") ~ "Rest"))
+
 true_lables<-true_lables %>% mutate(Sev_vs_rest = case_when(
   cell_type == c("Severe") ~ "Severe",
   cell_type != c("Severe") ~ "Rest"))
+
 true_lables<-true_lables %>% mutate(Mil_vs_rest = case_when(
   cell_type == c("Mild") ~ "Mild",
   cell_type != c("Mild") ~ "Rest"))
+
+
 imp_genes<-c("SFTA2","RSAD2","IL21","PEG10","IGHV3.69.1","SPON1","IFNL2","SLAMF7",
              "ADGRF5","CCL8","CALHM6","RGL1","CD52","CXCL10","IL4I1","IGFL2","IDO1",
              "GCH1","CXCL11","SFTPB"
@@ -52,7 +55,8 @@ imp_genes<-c("SFTA2","RSAD2","IL21","PEG10","IGHV3.69.1","SPON1","IFNL2","SLAMF7
              "PTPRCAP","SPHK1","ICAM1","TMPRSS11D","CD247","IGHV5.51","SPOCK2","CEACAM7","CD48",
              "SFTPA2","CCR4","SPP1","LYZ")
 imp_genes<-c("RSAD2","CXCL10","IDO1","GCH1","CXCL11","CRYBA4","CCL3","LGMN","IFIT1","CTSB",
-"GBP1","CCL2")
+             "GBP1","CCL2")
+
 imp_genes<-c( "SFTA2",      "RSAD2",     "IL21",       "PEG10",      "IGHV3.69.1",
               "SPON1",      "IFNL2"  ,    "SLAMF7",     "ADGRF5",     "CCL8",
               "CALHM6",     "RGL1"    ,   "CD52"   ,    "CXCL10" ,    "IL4I1",
@@ -92,21 +96,31 @@ imp_genes<-c( "SFTA2",      "RSAD2",     "IL21",       "PEG10",      "IGHV3.69.1
               "GSN"       , "TAOK1"   ,   "IFNA7",      "G0S2"      , "IFNA2"    ,
               "PPP1R15A" ,  "ANXA3"  ,    "FOLR3",      "NAMPT"    ,  "MT1E"    ,
               "TNFAIP6"  ,  "MT.ATP6",    "SAT1",       "AC136475.9")
+
+  
+
 data_imp<-t(data)[,intersect(rownames(data),imp_genes)]
 #data_imp_nor<-cbind(true_lables$Nor_vs_rest,data_imp)
-data_imp_nor<-cbind(as.numeric(as.factor(true_lables$Sev_vs_rest)),data_imp)
+data_imp_nor<-cbind(as.numeric(as.factor(true_lables$Mil_vs_rest)),data_imp)
 #data_imp<-as.data.frame(data_imp)
+
 smp_size_raw<-floor(0.75*nrow(data_imp_nor))
 set.seed(1000)
 train_ind_raw<-sample(nrow(data_imp_nor),size = smp_size_raw)
 train_raw.df<-as.data.frame(data_imp_nor[train_ind_raw,])
 test_raw.df<-as.data.frame(data_imp_nor[-train_ind_raw,])
+
 print("pre-processing done!")
 gc()
-model_nor <- fda(V1~., data = train_raw.df, method=mars)
+
+#train_raw.df$V1 = factor(train_raw.df$V1, levels = c(0, 1))
+summary(factor(train_raw.df$V1))
+
+svmfit = svm(factor(V1) ~ ., data = train_raw.df, kernel = 'radial', cost = 1, scale = FALSE,probability=TRUE)
 print("Model fitting done!")
-test.lda.predict_nor<-predict(model_nor,test_raw.df,type='posterior')
+test.lda.predict_nor<-predict(svmfit,test_raw.df,probability=TRUE)
 print("Prediction done!")
+
 pdf(file = "/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.pdf")
 rownames(true_lables)<-colnames(data)
 lda.data<-cbind(true_lables[intersect(rownames(train_raw.df),rownames(true_lables)),],predict(model_nor)$x)
@@ -114,13 +128,17 @@ lda.data<-cbind(true_lables[intersect(rownames(train_raw.df),rownames(true_lable
 ggplot(lda.data, aes(LD1, 0)) +
   geom_point(aes(color = Mil_vs_rest))
 dev.off()
+
 mean(test.lda.predict_nor$class==test_raw.df$V1)
-#save.image(file="/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.RData")
+
+save.image(file="/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.RData")
+
 #### AUCROC
-#PRROC_obj <- roc.curve(scores.class0 = (test.lda.predict_nor[,1]), weights.class0=as.numeric(as.factor(test_raw.df$V1)),
+#PRROC_obj <- roc.curve(scores.class0 = (attr(test.lda.predict_nor, "probabilities")[,1]), weights.class0=as.numeric(as.factor(test_raw.df$V1)),
 #                       curve=TRUE)
 #print(PRROC_obj$auc)
+
 library(pROC)
-auc(as.numeric(as.factor(test_raw.df$V1)),(test.lda.predict_nor[,1]))
+auc(as.numeric(as.factor(test_raw.df$V1)),(attr(test.lda.predict_nor, "probabilities")[,1]))
 
 '''
