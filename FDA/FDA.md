@@ -2,7 +2,7 @@
 
 Here we explain how LDA can be performed to classify cells based on expression of top DE genes.
 
-''' R
+``` R 
 #### Flexible Discriminant Analysis (FDA)
 memory.limit(size=150000)
 library(dplyr)
