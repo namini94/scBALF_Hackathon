@@ -140,7 +140,7 @@ dev.off()
 mean(test.lda.predict_nor$class==test_raw.df$V1)
 
 #save.image(file="/scratch/user/naminiyakan/hackathon/194genes_lda_mil_10000.RData")
-                                                                                                 137,1         Bot
+                                                                                         
 
 
 '''
