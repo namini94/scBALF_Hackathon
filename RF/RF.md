@@ -55,6 +55,7 @@ imp_genes<-c("SFTA2","RSAD2","IL21","PEG10","IGHV3.69.1","SPON1","IFNL2","SLAMF7
              "IGFBP4","FGL2","KRTAP3.1","CLDN3","LAMC2","PLA2G7","MARCO","IER3","NUPR1","CD2",
              "PTPRCAP","SPHK1","ICAM1","TMPRSS11D","CD247","IGHV5.51","SPOCK2","CEACAM7","CD48",
              "SFTPA2","CCR4","SPP1","LYZ")
+
 imp_genes<-c("RSAD2","CXCL10","IDO1","GCH1","CXCL11","CRYBA4","CCL3","LGMN","IFIT1","CTSB",
              "GBP1","CCL2")
 
@@ -120,17 +121,17 @@ print("Model fitting done!")
 test.lda.predict_nor<-predict(RFfit,test_raw.df,type="prob")
 print("Prediction done!")
 
-pdf(file = "/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.pdf")
-rownames(true_lables)<-colnames(data)
-lda.data<-cbind(true_lables[intersect(rownames(train_raw.df),rownames(true_lables)),],predict(model_nor)$x)
+#pdf(file = "/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.pdf")
+#rownames(true_lables)<-colnames(data)
+#lda.data<-cbind(true_lables[intersect(rownames(train_raw.df),rownames(true_lables)),],predict(model_nor)$x)
 #lda.data <- cbind(train_raw.df, predict(model_nor)$x)
-ggplot(lda.data, aes(LD1, 0)) +
-  geom_point(aes(color = Mil_vs_rest))
-dev.off()
+#ggplot(lda.data, aes(LD1, 0)) +
+#  geom_point(aes(color = Mil_vs_rest))
+#dev.off()
 
-mean(test.lda.predict_nor$class==test_raw.df$V1)
+#mean(test.lda.predict_nor$class==test_raw.df$V1)
 
-save.image(file="/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.RData")
+#save.image(file="/scratch/user/naminiyakan/hackathon/88genes_fda_sev_1000.RData")
 
 #### AUCROC
 #PRROC_obj <- roc.curve(scores.class0 = (test.lda.predict_nor[,1]), weights.class0=as.numeric(as.factor(test_raw.df$V1)),
